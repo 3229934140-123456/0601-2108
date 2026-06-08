@@ -1,0 +1,152 @@
+@use '@/styles/variables.scss' as *;
+
+.header {
+  margin: 0 (-$page-padding);
+  padding: $spacing-xl $page-padding;
+  background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-light 100%);
+  color: $color-text-white;
+  text-align: center;
+}
+
+.pointsValue {
+  font-size: 80rpx;
+  font-weight: $font-weight-bold;
+  margin-bottom: 8rpx;
+}
+
+.pointsLabel {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+}
+
+.tabs {
+  display: flex;
+  background: $color-bg-card;
+  margin: 0 (-$page-padding) $spacing-md;
+  padding: 0 $page-padding;
+}
+
+.tabItem {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-md 0;
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  position: relative;
+  transition: all $transition-base;
+}
+
+.tabActive {
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48rpx;
+    height: 4rpx;
+    background-color: $color-primary;
+    border-radius: $radius-xs;
+  }
+}
+
+.recordItem {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: $shadow-card;
+}
+
+.recordLeft {
+  flex: 1;
+}
+
+.recordTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: 8rpx;
+  @include text-ellipsis;
+}
+
+.recordTime {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.recordPoints {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  margin-left: $spacing-md;
+
+  &.earn {
+    color: $color-success;
+  }
+
+  &.spend {
+    color: $color-error;
+  }
+}
+
+.exchangeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.exchangeCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  text-align: center;
+  box-shadow: $shadow-card;
+}
+
+.exchangeIcon {
+  font-size: 80rpx;
+  margin-bottom: $spacing-sm;
+}
+
+.exchangeName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: 8rpx;
+}
+
+.exchangePoints {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.exchangeStock {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-md;
+}
+
+.exchangeBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-sm;
+  background: $color-bg-tag-orange;
+  color: $color-warning;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-button;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}

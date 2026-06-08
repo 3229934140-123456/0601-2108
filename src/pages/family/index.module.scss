@@ -1,0 +1,121 @@
+@use '@/styles/variables.scss' as *;
+
+.addBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  border-radius: $radius-button;
+  margin-top: $spacing-lg;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.memberCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-top: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.memberHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: $radius-round;
+  background: $color-bg-tag-green;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  margin-right: $spacing-md;
+}
+
+.memberInfo {
+  flex: 1;
+}
+
+.memberName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 8rpx;
+}
+
+.memberRelation {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  background: $color-bg-tag-green;
+  padding: 4rpx 16rpx;
+  border-radius: $radius-sm;
+  display: inline-block;
+}
+
+.memberDetail {
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.detailRow {
+  display: flex;
+  padding: $spacing-xs 0;
+  font-size: $font-size-sm;
+}
+
+.detailLabel {
+  color: $color-text-tertiary;
+  width: 140rpx;
+  flex-shrink: 0;
+}
+
+.detailValue {
+  color: $color-text-primary;
+  flex: 1;
+}
+
+.memberActions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.actionBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-sm;
+  font-size: $font-size-sm;
+  border-radius: $radius-button;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.editBtn {
+  background: $color-bg-tag-blue;
+  color: $color-info;
+}
+
+.deleteBtn {
+  background: $color-bg-tag-red;
+  color: $color-error;
+}

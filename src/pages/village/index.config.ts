@@ -1,0 +1,4 @@
+export default definePageConfig({
+  navigationBarTitleText: '村务公开',
+  enablePullDownRefresh: true,
+});

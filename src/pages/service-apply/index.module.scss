@@ -1,0 +1,162 @@
+@use '@/styles/variables.scss' as *;
+
+.formCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-top: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.formItem {
+  margin-bottom: $spacing-lg;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+  display: block;
+}
+
+.required {
+  color: $color-error;
+  margin-right: 4rpx;
+}
+
+.input {
+  width: 100%;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+  min-height: 80rpx;
+}
+
+.textarea {
+  width: 100%;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+  min-height: 240rpx;
+  line-height: 1.6;
+}
+
+.locationBox {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.locationText {
+  flex: 1;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.locationPlaceholder {
+  flex: 1;
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.locationBtn {
+  @include button-reset;
+  padding: 8rpx 20rpx;
+  background: $color-bg-tag-green;
+  color: $color-primary;
+  font-size: $font-size-xs;
+  border-radius: $radius-sm;
+}
+
+.imageList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.imageItem {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: $radius-md;
+  position: relative;
+  overflow: hidden;
+}
+
+.imageItemImg {
+  width: 100%;
+  height: 100%;
+}
+
+.imageRemove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40rpx;
+  height: 40rpx;
+  background: rgba(0, 0, 0, 0.5);
+  color: $color-text-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  border-bottom-left-radius: $radius-md;
+}
+
+.imageAdd {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: $radius-md;
+  background: $color-bg-page;
+  border: 2rpx dashed $color-border;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.imageAddIcon {
+  font-size: 56rpx;
+  color: $color-text-tertiary;
+}
+
+.imageAddText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.submitBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  border-radius: $radius-button;
+  margin-top: $spacing-xl;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+
+  &.disabled {
+    background: $color-text-disabled;
+  }
+}

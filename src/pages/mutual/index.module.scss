@@ -1,0 +1,121 @@
+@use '@/styles/variables.scss' as *;
+
+.header {
+  margin: 0 (-$page-padding);
+  padding: $spacing-lg $page-padding;
+  background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-light 100%);
+  color: $color-text-white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerText {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.publishBtn {
+  @include button-reset;
+  padding: 12rpx 32rpx;
+  background: $color-text-white;
+  color: $color-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  border-radius: $radius-button;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.tabs {
+  display: flex;
+  background: $color-bg-card;
+  margin: 0 (-$page-padding) $spacing-md;
+  padding: 0 $page-padding;
+}
+
+.tabItem {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-md 0;
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  position: relative;
+  transition: all $transition-base;
+}
+
+.tabActive {
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48rpx;
+    height: 4rpx;
+    background-color: $color-primary;
+    border-radius: $radius-xs;
+  }
+}
+
+.mutualCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.mutualHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+}
+
+.mutualTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  flex: 1;
+  @include text-ellipsis;
+  margin-right: $spacing-sm;
+}
+
+.mutualDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  @include text-ellipsis-multi(2);
+  margin-bottom: $spacing-md;
+  line-height: 1.6;
+}
+
+.mutualPrice {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-error;
+  margin-bottom: $spacing-md;
+}
+
+.mutualMeta {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.mutualMetaItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
