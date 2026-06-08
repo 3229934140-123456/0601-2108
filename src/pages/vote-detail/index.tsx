@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import PageContainer from '@/components/PageContainer';
 import StatusTag from '@/components/StatusTag';
 import EmptyState from '@/components/EmptyState';
-import { voteTopics } from '@/data/village';
 import { useAppStore } from '@/store/useAppStore';
 import { generateId } from '@/utils';
 import styles from './index.module.scss';
@@ -12,17 +11,10 @@ import classnames from 'classnames';
 
 const VoteDetailPage: React.FC = () => {
   const router = useRouter();
-  const { addPointsRecord } = useAppStore();
-  const [topic, setTopic] = useState(voteTopics.find((t) => t.id === router.params.id));
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-
-  useEffect(() => {
-    const found = voteTopics.find((t) => t.id === router.params.id);
-    setTopic(found);
-    if (found?.myVote) {
-      setSelectedOption(found.myVote);
-    }
-  }, [router.params.id]);
+  const { voteTopics, submitVote, addPointsRecord } = useAppStore();
+  const topic = voteTopics.find((t) => t.id === router.params.id);
+  const [selectedOption, setSelectedOption] = useState<string | null>(topic?.myVote || null);
+  const [submitting, setSubmitting] = useState(false);
 
   if (!topic) {
     return (
@@ -35,23 +27,30 @@ const VoteDetailPage: React.FC = () => {
   const total = topic.totalVotes || 1;
 
   const handleVote = () => {
-    if (!selectedOption || topic.hasVoted) return;
+    if (!selectedOption || topic.hasVoted || submitting) return;
 
     Taro.showModal({
       title: '确认投票',
       content: '确认提交投票？投票后不可修改。',
       success: (res) => {
         if (res.confirm) {
-          console.log('[VoteDetail] 投票成功', selectedOption);
-          addPointsRecord({
-            id: generateId(),
-            title: `村务投票：${topic.title.slice(0, 15)}...`,
-            points: 20,
-            type: 'earn',
-            time: new Date().toISOString().slice(0, 10),
-          });
-          Taro.showToast({ title: '投票成功 +20积分', icon: 'success' });
-          setTimeout(() => Taro.navigateBack(), 1500);
+          setSubmitting(true);
+          const result = submitVote(topic.id, selectedOption);
+          if (result.success) {
+            addPointsRecord({
+              id: generateId(),
+              title: `村务投票：${topic.title.slice(0, 15)}...`,
+              points: 20,
+              type: 'earn',
+              time: new Date().toISOString().slice(0, 10),
+            });
+            console.log('[VoteDetail] 投票成功写入store', topic.id, selectedOption);
+            Taro.showToast({ title: '投票成功 +20积分', icon: 'success' });
+            setTimeout(() => Taro.navigateBack(), 1200);
+          } else {
+            Taro.showToast({ title: result.message, icon: 'none' });
+            setSubmitting(false);
+          }
         }
       },
     });
@@ -98,10 +97,13 @@ const VoteDetailPage: React.FC = () => {
       </View>
 
       <View
-        className={classnames(styles.submitBtn, (!selectedOption || topic.hasVoted) && styles.disabled)}
+        className={classnames(
+          styles.submitBtn,
+          (!selectedOption || topic.hasVoted || submitting) && styles.disabled
+        )}
         onClick={handleVote}
       >
-        <Text>{topic.hasVoted ? '您已完成投票' : '确认投票'}</Text>
+        <Text>{topic.hasVoted ? '您已完成投票，仅可查看结果' : '确认投票'}</Text>
       </View>
     </PageContainer>
   );

@@ -3,13 +3,13 @@ import { View, Text, Input, Textarea } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import PageContainer from '@/components/PageContainer';
 import { useAppStore } from '@/store/useAppStore';
-import { MutualCategory } from '@/types';
-import { formatTime } from '@/utils';
+import { MutualCategory, MutualItem } from '@/types';
+import { formatTime, generateId } from '@/utils';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 
 const MutualPublishPage: React.FC = () => {
-  const { userInfo } = useAppStore();
+  const { userInfo, addMutualItem } = useAppStore();
   const [category, setCategory] = useState<MutualCategory>('machine');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -17,28 +17,37 @@ const MutualPublishPage: React.FC = () => {
   const [location, setLocation] = useState('');
   const [contact, setContact] = useState(userInfo.name);
   const [phone, setPhone] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const canSubmit = title.trim() && description.trim() && phone.trim();
+  const canSubmit = title.trim() && description.trim() && phone.trim() && !submitting;
 
   const handleSubmit = () => {
     if (!canSubmit) {
-      Taro.showToast({ title: '请填写完整信息', icon: 'none' });
+      if (!title.trim() || !description.trim() || !phone.trim()) {
+        Taro.showToast({ title: '请填写完整信息', icon: 'none' });
+      }
       return;
     }
 
-    console.log('[MutualPublish] 发布成功', {
+    setSubmitting(true);
+    const newItem: MutualItem = {
+      id: generateId(),
       category,
-      title,
-      description,
-      price,
-      location,
-      contact,
-      phone,
+      title: title.trim(),
+      description: description.trim(),
+      price: price.trim() || undefined,
+      contact: contact.trim() || userInfo.name,
+      phone: phone.trim(),
+      location: location.trim(),
       publishTime: formatTime(new Date()),
-    });
+      publisher: contact.trim() || userInfo.name,
+    };
+
+    addMutualItem(newItem);
+    console.log('[MutualPublish] 发布成功写入store', newItem);
 
     Taro.showToast({ title: '发布成功', icon: 'success' });
-    setTimeout(() => Taro.navigateBack(), 1500);
+    setTimeout(() => Taro.navigateBack(), 1200);
   };
 
   return (

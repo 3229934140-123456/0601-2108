@@ -4,17 +4,17 @@ import Taro from '@tarojs/taro';
 import PageContainer from '@/components/PageContainer';
 import EmptyState from '@/components/EmptyState';
 import StatusTag from '@/components/StatusTag';
-import { mutualList } from '@/data/mutual';
+import { useAppStore } from '@/store/useAppStore';
 import { getMutualCategoryName } from '@/utils';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 
 const MutualPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'machine' | 'product'>('all');
-  const [list, setList] = useState(mutualList);
+  const mutualList = useAppStore((s) => s.mutualList);
 
   const filteredList =
-    activeTab === 'all' ? list : list.filter((item) => item.category === activeTab);
+    activeTab === 'all' ? mutualList : mutualList.filter((item) => item.category === activeTab);
 
   const handlePublish = () => {
     Taro.navigateTo({ url: '/pages/mutual-publish/index' });

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import PageContainer from '@/components/PageContainer';
 import EmptyState from '@/components/EmptyState';
-import { volunteerActivities } from '@/data/village';
 import { useAppStore } from '@/store/useAppStore';
 import { generateId } from '@/utils';
 import styles from './index.module.scss';
@@ -11,15 +10,9 @@ import classnames from 'classnames';
 
 const VolunteerDetailPage: React.FC = () => {
   const router = useRouter();
-  const { addPointsRecord } = useAppStore();
-  const [activity, setActivity] = useState(
-    volunteerActivities.find((a) => a.id === router.params.id)
-  );
-
-  useEffect(() => {
-    const found = volunteerActivities.find((a) => a.id === router.params.id);
-    setActivity(found);
-  }, [router.params.id]);
+  const { volunteerActivities, signUpVolunteer, addPointsRecord } = useAppStore();
+  const activity = volunteerActivities.find((a) => a.id === router.params.id);
+  const [submitting, setSubmitting] = useState(false);
 
   if (!activity) {
     return (
@@ -33,26 +26,33 @@ const VolunteerDetailPage: React.FC = () => {
   const isFull = activity.currentPeople >= activity.maxPeople;
 
   const handleSign = () => {
-    if (activity.hasSigned || isFull) return;
+    if (activity.hasSigned || isFull || submitting) return;
 
     Taro.showModal({
       title: '确认报名',
       content: `确认报名参加"${activity.title}"？`,
       success: (res) => {
         if (res.confirm) {
-          console.log('[VolunteerDetail] 报名成功');
-          addPointsRecord({
-            id: generateId(),
-            title: `志愿服务报名：${activity.title.slice(0, 15)}...`,
-            points: activity.points,
-            type: 'earn',
-            time: new Date().toISOString().slice(0, 10),
-          });
-          Taro.showToast({
-            title: `报名成功 +${activity.points}积分`,
-            icon: 'success',
-          });
-          setTimeout(() => Taro.navigateBack(), 1500);
+          setSubmitting(true);
+          const result = signUpVolunteer(activity.id);
+          if (result.success && result.points) {
+            addPointsRecord({
+              id: generateId(),
+              title: `志愿服务报名：${activity.title.slice(0, 15)}...`,
+              points: result.points,
+              type: 'earn',
+              time: new Date().toISOString().slice(0, 10),
+            });
+            console.log('[VolunteerDetail] 报名成功写入store', activity.id);
+            Taro.showToast({
+              title: `报名成功 +${result.points}积分`,
+              icon: 'success',
+            });
+            setTimeout(() => Taro.navigateBack(), 1200);
+          } else if (!result.success) {
+            Taro.showToast({ title: result.message, icon: 'none' });
+            setSubmitting(false);
+          }
         }
       },
     });
@@ -91,14 +91,17 @@ const VolunteerDetailPage: React.FC = () => {
       </View>
 
       <View
-        className={classnames(styles.signBtn, (activity.hasSigned || isFull) && styles.signed)}
+        className={classnames(
+          styles.signBtn,
+          (activity.hasSigned || isFull || submitting) && styles.signed
+        )}
         onClick={handleSign}
       >
         <Text>
           {activity.hasSigned
-            ? '您已报名'
+            ? '您已报名该活动'
             : isFull
-            ? '名额已满'
+            ? '活动名额已满'
             : '立即报名'}
         </Text>
       </View>

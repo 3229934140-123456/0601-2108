@@ -5,21 +5,57 @@ import PageContainer from '@/components/PageContainer';
 import SectionTitle from '@/components/SectionTitle';
 import EmptyState from '@/components/EmptyState';
 import StatusTag from '@/components/StatusTag';
-import { voteTopics, volunteerActivities } from '@/data/village';
+import { useAppStore } from '@/store/useAppStore';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 
 const VillagePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'vote' | 'volunteer'>('vote');
-  const [topics, setTopics] = useState(voteTopics);
-  const [activities, setActivities] = useState(volunteerActivities);
+  const voteTopics = useAppStore((s) => s.voteTopics);
+  const volunteerActivities = useAppStore((s) => s.volunteerActivities);
+  const { signUpVolunteer, addPointsRecord } = useAppStore();
+  const generateId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
   const handleVoteClick = (id: string) => {
     Taro.navigateTo({ url: `/pages/vote-detail/index?id=${id}` });
   };
 
-  const handleVolunteerClick = (id: string) => {
-    Taro.navigateTo({ url: `/pages/volunteer-detail/index?id=${id}` });
+  const handleVolunteerSign = (e: React.MouseEvent, activityId: string) => {
+    e.stopPropagation();
+    const activity = volunteerActivities.find((a) => a.id === activityId);
+    if (!activity) return;
+    if (activity.hasSigned) {
+      Taro.showToast({ title: '您已报名该活动', icon: 'none' });
+      return;
+    }
+    if (activity.currentPeople >= activity.maxPeople) {
+      Taro.showToast({ title: '活动名额已满', icon: 'none' });
+      return;
+    }
+    Taro.showModal({
+      title: '确认报名',
+      content: `确认报名参加"${activity.title}"？`,
+      success: (res) => {
+        if (res.confirm) {
+          const result = signUpVolunteer(activityId);
+          if (result.success && result.points) {
+            addPointsRecord({
+              id: generateId(),
+              title: `志愿服务报名：${activity.title.slice(0, 15)}...`,
+              points: result.points,
+              type: 'earn',
+              time: new Date().toISOString().slice(0, 10),
+            });
+            Taro.showToast({
+              title: `报名成功 +${result.points}积分`,
+              icon: 'success',
+            });
+          } else if (!result.success) {
+            Taro.showToast({ title: result.message, icon: 'none' });
+          }
+        }
+      },
+    });
   };
 
   return (
@@ -43,10 +79,10 @@ const VillagePage: React.FC = () => {
         {activeTab === 'vote' ? (
           <>
             <SectionTitle title="进行中的议题" />
-            {topics.length === 0 ? (
+            {voteTopics.length === 0 ? (
               <EmptyState text="暂无可投票议题" icon="🗳️" />
             ) : (
-              topics.map((topic) => {
+              voteTopics.map((topic) => {
                 const total = topic.totalVotes || 1;
                 return (
                   <View
@@ -99,14 +135,21 @@ const VillagePage: React.FC = () => {
         ) : (
           <>
             <SectionTitle title="志愿活动" />
-            {activities.length === 0 ? (
+            {volunteerActivities.length === 0 ? (
               <EmptyState text="暂无志愿活动" icon="💚" />
             ) : (
-              activities.map((activity) => (
+              volunteerActivities.map((activity) => {
+                const isFull = activity.currentPeople >= activity.maxPeople;
+                const btnText = activity.hasSigned
+                  ? '已报名'
+                  : isFull
+                  ? '名额已满'
+                  : '立即报名';
+                return (
                 <View
                   key={activity.id}
                   className={styles.activityCard}
-                  onClick={() => handleVolunteerClick(activity.id)}
+                  onClick={() => Taro.navigateTo({ url: `/pages/volunteer-detail/index?id=${activity.id}` })}
                 >
                   <Text className={styles.activityTitle}>{activity.title}</Text>
                   <Text className={styles.activityDesc}>{activity.description}</Text>
@@ -134,14 +177,16 @@ const VillagePage: React.FC = () => {
                     <View
                       className={classnames(
                         styles.activitySignBtn,
-                        activity.hasSigned && styles.signed
+                        (activity.hasSigned || isFull) && styles.signed
                       )}
+                      onClick={(e) => handleVolunteerSign(e, activity.id)}
                     >
-                      <Text>{activity.hasSigned ? '已报名' : '立即报名'}</Text>
+                      <Text>{btnText}</Text>
                     </View>
                   </View>
                 </View>
-              ))
+              );
+              })
             )}
           </>
         )}

@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import PageContainer from '@/components/PageContainer';
 import StatusTag from '@/components/StatusTag';
 import EmptyState from '@/components/EmptyState';
-import { mutualList } from '@/data/mutual';
+import { useAppStore } from '@/store/useAppStore';
 import { getMutualCategoryName } from '@/utils';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 
 const MutualDetailPage: React.FC = () => {
   const router = useRouter();
-  const [item, setItem] = useState(mutualList.find((m) => m.id === router.params.id));
-
-  useEffect(() => {
-    const found = mutualList.find((m) => m.id === router.params.id);
-    setItem(found);
-  }, [router.params.id]);
+  const mutualList = useAppStore((s) => s.mutualList);
+  const item = mutualList.find((m) => m.id === router.params.id);
 
   if (!item) {
     return (
