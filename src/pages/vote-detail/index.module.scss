@@ -43,6 +43,7 @@
   border-radius: $radius-md;
   margin-bottom: $spacing-sm;
   transition: all $transition-base;
+  position: relative;
 
   &.selected {
     border-color: $color-primary;
@@ -53,6 +54,25 @@
     border-color: $color-border;
     background: $color-bg-page;
   }
+
+  &.myVote {
+    border-color: $color-primary;
+    background: $color-bg-tag-green;
+    box-shadow: 0 0 0 2rpx rgba(43, 164, 113, 0.15);
+  }
+}
+
+.myVoteBadge {
+  position: absolute;
+  top: -12rpx;
+  right: 16rpx;
+  background: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  padding: 4rpx 16rpx;
+  border-radius: $radius-sm;
+  line-height: 1.4;
 }
 
 .optionHeader {

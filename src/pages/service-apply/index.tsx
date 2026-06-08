@@ -83,6 +83,8 @@ const ServiceApplyPage: React.FC = () => {
       status: 'pending',
       submitTime: formatTime(new Date()),
       updateTime: formatTime(new Date()),
+      contact: contact.trim() || undefined,
+      phone: phone.trim() || undefined,
       location,
       images,
       progressList: [

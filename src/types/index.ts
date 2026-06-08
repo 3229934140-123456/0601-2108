@@ -24,6 +24,8 @@ export interface ServiceRecord {
   status: 'pending' | 'processing' | 'completed' | 'rejected';
   submitTime: string;
   updateTime: string;
+  contact?: string;
+  phone?: string;
   location?: string;
   images?: string[];
   progressList?: ServiceProgress[];

@@ -130,3 +130,36 @@
   border-radius: $radius-md;
   overflow: hidden;
 }
+
+.contactBox {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.contactRow {
+  display: flex;
+  padding: $spacing-xs 0;
+  font-size: $font-size-sm;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.contactLabel {
+  color: $color-text-tertiary;
+  width: 140rpx;
+  flex-shrink: 0;
+}
+
+.contactValue {
+  color: $color-text-primary;
+  flex: 1;
+  font-weight: $font-weight-medium;
+}

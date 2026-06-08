@@ -69,42 +69,59 @@ const VoteDetailPage: React.FC = () => {
 
       <View className={styles.card}>
         <View className={styles.options}>
-          {topic.options.map((opt) => (
-            <View
-              key={opt.id}
-              className={classnames(
-                styles.optionItem,
-                selectedOption === opt.id && !topic.hasVoted && styles.selected,
-                topic.hasVoted && styles.voted
-              )}
-              onClick={() => !topic.hasVoted && setSelectedOption(opt.id)}
-            >
-              <View className={styles.optionHeader}>
-                <Text className={styles.optionLabel}>{opt.label}</Text>
-                <Text className={styles.optionCount}>
-                  {opt.count}票 ({Math.round((opt.count / total) * 100)}%)
-                </Text>
+          {topic.options.map((opt) => {
+            const isMyVote = topic.myVote === opt.id;
+            return (
+              <View
+                key={opt.id}
+                className={classnames(
+                  styles.optionItem,
+                  !topic.hasVoted && selectedOption === opt.id && styles.selected,
+                  topic.hasVoted && styles.voted,
+                  isMyVote && styles.myVote
+                )}
+                onClick={() => !topic.hasVoted && setSelectedOption(opt.id)}
+              >
+                {isMyVote && (
+                  <View className={styles.myVoteBadge}>
+                    <Text>我的选择</Text>
+                  </View>
+                )}
+                <View className={styles.optionHeader}>
+                  <Text className={styles.optionLabel}>{opt.label}</Text>
+                  <Text className={styles.optionCount}>
+                    {opt.count}票 ({Math.round((opt.count / total) * 100)}%)
+                  </Text>
+                </View>
+                <View className={styles.optionBar}>
+                  <View
+                    className={styles.optionBarFill}
+                    style={{ width: `${(opt.count / total) * 100}%` }}
+                  />
+                </View>
               </View>
-              <View className={styles.optionBar}>
-                <View
-                  className={styles.optionBarFill}
-                  style={{ width: `${(opt.count / total) * 100}%` }}
-                />
-              </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
       </View>
 
-      <View
-        className={classnames(
-          styles.submitBtn,
-          (!selectedOption || topic.hasVoted || submitting) && styles.disabled
-        )}
-        onClick={handleVote}
-      >
-        <Text>{topic.hasVoted ? '您已完成投票，仅可查看结果' : '确认投票'}</Text>
-      </View>
+      {!topic.hasVoted && (
+        <View
+          className={classnames(
+            styles.submitBtn,
+            (!selectedOption || submitting) && styles.disabled
+          )}
+          onClick={handleVote}
+        >
+          <Text>确认投票</Text>
+        </View>
+      )}
+
+      {topic.hasVoted && (
+        <View className={classnames(styles.submitBtn, styles.disabled)}>
+          <Text>您已完成投票，仅可查看结果</Text>
+        </View>
+      )}
     </PageContainer>
   );
 };

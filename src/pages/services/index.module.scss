@@ -129,3 +129,38 @@
   font-size: $font-size-sm;
   color: $color-primary;
 }
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.filterChip {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  background: $color-bg-card;
+  color: $color-text-secondary;
+  border: 2rpx solid transparent;
+  transition: all $transition-base;
+}
+
+.filterChipActive {
+  background: $color-bg-tag-green;
+  color: $color-primary;
+  border-color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.filterGroup {
+  margin-bottom: $spacing-md;
+}
+
+.filterGroupLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xs;
+}

@@ -145,6 +145,103 @@
   }
 }
 
+.voteTagRow {
+  display: flex;
+  gap: $spacing-xs;
+  align-items: center;
+}
+
+.voteMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.subTabs {
+  display: flex;
+  background: $color-bg-card;
+  margin: 0 (-$page-padding) $spacing-md;
+  padding: 0 $page-padding;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.subTabItem {
+  padding: $spacing-md $spacing-lg;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  position: relative;
+  transition: all $transition-base;
+}
+
+.subTabActive {
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40rpx;
+    height: 4rpx;
+    background-color: $color-primary;
+    border-radius: $radius-xs;
+  }
+}
+
+.mySignCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6rpx;
+    height: 100%;
+    background: linear-gradient(180deg, $color-primary 0%, $color-primary-light 100%);
+  }
+}
+
+.mySignTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+  padding-left: $spacing-xs;
+}
+
+.mySignInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  padding-left: $spacing-xs;
+}
+
+.mySignInfoItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.mySignPoints {
+  margin-top: $spacing-sm;
+  padding-top: $spacing-sm;
+  border-top: 1rpx solid $color-divider;
+  padding-left: $spacing-xs;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-accent;
+}
+
 .activityCard {
   background: $color-bg-card;
   border-radius: $radius-lg;

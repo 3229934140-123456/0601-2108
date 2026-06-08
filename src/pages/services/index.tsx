@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import PageContainer from '@/components/PageContainer';
@@ -12,12 +12,42 @@ import {
   getServiceStatusColor,
   getServiceStatusName,
 } from '@/utils';
+import { ServiceCategory } from '@/types';
 import styles from './index.module.scss';
 import classnames from 'classnames';
+
+type StatusFilter = 'all' | 'pending' | 'processing' | 'completed' | 'rejected';
+type CategoryFilter = 'all' | ServiceCategory;
+
+const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
+  { value: 'all', label: '全部状态' },
+  { value: 'pending', label: '待受理' },
+  { value: 'processing', label: '处理中' },
+  { value: 'completed', label: '已完成' },
+  { value: 'rejected', label: '已驳回' },
+];
+
+const CATEGORY_OPTIONS: { value: CategoryFilter; label: string }[] = [
+  { value: 'all', label: '全部类型' },
+  ...serviceCategories.map((c) => ({
+    value: c.key as ServiceCategory,
+    label: c.name,
+  })),
+];
 
 const ServicesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'apply' | 'record'>('apply');
   const { serviceRecords } = useAppStore();
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+
+  const filteredRecords = useMemo(() => {
+    return serviceRecords.filter((r) => {
+      if (statusFilter !== 'all' && r.status !== statusFilter) return false;
+      if (categoryFilter !== 'all' && r.category !== categoryFilter) return false;
+      return true;
+    });
+  }, [serviceRecords, statusFilter, categoryFilter]);
 
   const handleCategoryClick = (key: string) => {
     Taro.navigateTo({
@@ -76,11 +106,51 @@ const ServicesPage: React.FC = () => {
           </>
         ) : (
           <>
-            <SectionTitle title="办事记录" />
-            {serviceRecords.length === 0 ? (
-              <EmptyState text="暂无办事记录" icon="📋" />
+            <SectionTitle title={`办事记录（${filteredRecords.length}/${serviceRecords.length}）`} />
+
+            <View className={styles.filterGroup}>
+              <Text className={styles.filterGroupLabel}>按状态筛选</Text>
+              <View className={styles.filterRow}>
+                {STATUS_OPTIONS.map((opt) => (
+                  <View
+                    key={opt.value}
+                    className={classnames(
+                      styles.filterChip,
+                      statusFilter === opt.value && styles.filterChipActive
+                    )}
+                    onClick={() => setStatusFilter(opt.value)}
+                  >
+                    <Text>{opt.label}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            <View className={styles.filterGroup}>
+              <Text className={styles.filterGroupLabel}>按类型筛选</Text>
+              <View className={styles.filterRow}>
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <View
+                    key={opt.value}
+                    className={classnames(
+                      styles.filterChip,
+                      categoryFilter === opt.value && styles.filterChipActive
+                    )}
+                    onClick={() => setCategoryFilter(opt.value)}
+                  >
+                    <Text>{opt.label}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            {filteredRecords.length === 0 ? (
+              <EmptyState
+                text={serviceRecords.length === 0 ? '暂无办事记录' : '筛选条件下没有记录'}
+                icon="📋"
+              />
             ) : (
-              serviceRecords.map((record) => (
+              filteredRecords.map((record) => (
                 <View
                   key={record.id}
                   className={styles.recordCard}

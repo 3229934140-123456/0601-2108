@@ -50,6 +50,23 @@ const ServiceDetailPage: React.FC = () => {
 
         <Text className={styles.sectionTitle}>问题描述</Text>
         <Text className={styles.desc}>{record.description}</Text>
+
+        {(record.contact || record.phone) && (
+          <View className={styles.contactBox}>
+            {record.contact && (
+              <View className={styles.contactRow}>
+                <Text className={styles.contactLabel}>联系人</Text>
+                <Text className={styles.contactValue}>{record.contact}</Text>
+              </View>
+            )}
+            {record.phone && (
+              <View className={styles.contactRow}>
+                <Text className={styles.contactLabel}>联系电话</Text>
+                <Text className={styles.contactValue}>{record.phone}</Text>
+              </View>
+            )}
+          </View>
+        )}
       </View>
 
       {(record.location || (record.images && record.images.length > 0)) && (
